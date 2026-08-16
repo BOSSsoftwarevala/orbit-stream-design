@@ -20,6 +20,9 @@ import type {
   Warehouse,
 } from "@/types";
 
+/** Cyclic index helper — seed fixtures never go out of bounds. */
+const at = <T,>(arr: readonly T[], i: number): T => arr[((i % arr.length) + arr.length) % arr.length] as T;
+
 export const plans: ServicePlan[] = [
   { id: "PL-100", name: "Residential 100", down: 100, up: 50, price: 49.0, technology: "GPON", dataPolicy: "Unlimited", contractTerm: "12 months", subscribers: 1842 },
   { id: "PL-300", name: "Residential 300", down: 300, up: 150, price: 69.0, technology: "GPON", dataPolicy: "Unlimited", contractTerm: "12 months", subscribers: 2610 },
@@ -33,21 +36,23 @@ const firstNames = ["Maya", "Declan", "Priya", "Tomas", "Awa", "Henrik", "Rosa",
 const lastNames = ["Okafor", "Whitfield", "Raman", "Alvarez", "Diallo", "Sorensen", "Delgado", "Mensah", "Halvorsen", "Haddad", "Petrova", "Lindqvist", "Rahim", "Kovac", "Beaumont", "Tran", "Nasser", "Ferraro", "Ahmadi", "Roussel"];
 const cities = ["Northgate", "Ridgemont", "Cedar Flats", "Harbor Point", "Alder Creek", "Westmill"];
 const streets = ["Foundry Rd", "Lakeshore Ave", "Beacon St", "Quarry Ln", "Sycamore Dr", "Signal Hill Rd"];
-const statuses: Customer["status"][] = ["active", "active", "active", "active", "suspended", "pending_install", "lead", "cancelled"];
+const custStatuses: Customer["status"][] = ["active", "active", "active", "active", "suspended", "pending_install", "lead", "cancelled"];
 
 export const customers: Customer[] = Array.from({ length: 48 }, (_, i) => {
-  const plan = plans[i % plans.length];
-  const status = statuses[i % statuses.length];
+  const plan = at(plans, i);
+  const status = at(custStatuses, i);
   const balance = status === "suspended" ? 120 + (i % 7) * 31.5 : i % 5 === 0 ? (i % 3) * 24.75 : 0;
+  const first = at(firstNames, i);
+  const last = at(lastNames, i * 7);
   return {
     id: `CUS-${1000 + i}`,
     accountNumber: `AC-${20450 + i * 3}`,
-    name: `${firstNames[i % firstNames.length]} ${lastNames[(i * 7) % lastNames.length]}`,
-    company: i % 6 === 0 ? `${lastNames[i % lastNames.length]} Logistics` : undefined,
-    email: `${firstNames[i % firstNames.length].toLowerCase()}.${lastNames[(i * 7) % lastNames.length].toLowerCase()}@mail.test`,
+    name: `${first} ${last}`,
+    ...(i % 6 === 0 ? { company: `${last} Logistics` } : {}),
+    email: `${first.toLowerCase()}.${last.toLowerCase()}@mail.test`,
     phone: `+1 (555) ${String(200 + i).padStart(3, "0")}-${String(1000 + i * 13).slice(0, 4)}`,
-    address: `${120 + i * 4} ${streets[i % streets.length]}`,
-    city: cities[i % cities.length],
+    address: `${120 + i * 4} ${at(streets, i)}`,
+    city: at(cities, i),
     status,
     planId: plan.id,
     balance: Number(balance.toFixed(2)),
@@ -56,36 +61,39 @@ export const customers: Customer[] = Array.from({ length: 48 }, (_, i) => {
     tags: [plan.technology, i % 6 === 0 ? "Business" : "Residential", ...(balance > 100 ? ["Collections"] : [])],
     lat: 44.62 + ((i % 8) - 4) * 0.022,
     lng: -63.58 + ((i % 11) - 5) * 0.03,
-  };
+  } satisfies Customer;
 });
+
+const nasDevices = ["bng-core-01", "bng-core-02", "bng-edge-north"];
 
 export const subscriptions: Subscription[] = customers
   .filter((c) => c.status === "active" || c.status === "suspended" || c.status === "pending_install")
   .map((c, i) => {
-    const plan = plans.find((p) => p.id === c.planId)!;
+    const plan = plans.find((p) => p.id === c.planId) ?? at(plans, i);
     return {
       id: `SUB-${5000 + i}`,
       customerId: c.id,
       customerName: c.name,
       planId: plan.id,
       planName: plan.name,
-      status:
-        c.status === "active" ? "active" : c.status === "suspended" ? "suspended" : "pending",
+      status: c.status === "active" ? "active" : c.status === "suspended" ? "suspended" : "pending",
       activatedAt: c.since,
       pppoeUser: `${c.accountNumber.toLowerCase()}@isp.net`,
       ipAddress: `10.${40 + (i % 6)}.${i % 250}.${(i * 3) % 250}`,
-      nasDevice: ["bng-core-01", "bng-core-02", "bng-edge-north"][i % 3],
+      nasDevice: at(nasDevices, i),
       vlan: 700 + (i % 40),
       mrr: plan.price,
     } satisfies Subscription;
   });
 
+const invoiceStatuses: Invoice["status"][] = ["paid", "open", "overdue", "draft"];
+
 export const invoices: Invoice[] = customers.slice(0, 34).map((c, i) => {
-  const plan = plans.find((p) => p.id === c.planId)!;
+  const plan = plans.find((p) => p.id === c.planId) ?? at(plans, i);
   const subtotal = plan.price + (i % 4 === 0 ? 10 : 0);
   const tax = Number((subtotal * 0.13).toFixed(2));
   const status: Invoice["status"] =
-    i % 9 === 0 ? "overdue" : i % 5 === 0 ? "open" : i % 17 === 0 ? "draft" : "paid";
+    i % 9 === 0 ? "overdue" : i % 5 === 0 ? "open" : i % 17 === 0 ? "draft" : at(invoiceStatuses, 0);
   return {
     id: `INV-${9000 + i}`,
     number: `2026-${String(1400 + i)}`,
@@ -101,19 +109,25 @@ export const invoices: Invoice[] = customers.slice(0, 34).map((c, i) => {
       { description: `${plan.name} — monthly service`, qty: 1, rate: plan.price },
       ...(i % 4 === 0 ? [{ description: "Managed Wi-Fi router rental", qty: 1, rate: 10 }] : []),
     ],
-  };
+  } satisfies Invoice;
 });
+
+const methods: Payment["method"][] = ["Card", "ACH", "Bank Transfer", "Cash", "Wallet"];
+const payStatuses: Payment["status"][] = ["settled", "settled", "settled", "pending", "failed", "refunded"];
 
 export const payments: Payment[] = customers.slice(0, 26).map((c, i) => ({
   id: `PAY-${7000 + i}`,
   customerId: c.id,
   customerName: c.name,
   date: `2026-08-${String((i % 27) + 1).padStart(2, "0")}`,
-  method: (["Card", "ACH", "Bank Transfer", "Cash", "Wallet"] as const)[i % 5],
+  method: at(methods, i),
   reference: `TXN-${483920 + i * 17}`,
-  amount: Number((plans[i % plans.length].price * 1.13).toFixed(2)),
-  status: (["settled", "settled", "settled", "pending", "failed", "refunded"] as const)[i % 6],
+  amount: Number((at(plans, i).price * 1.13).toFixed(2)),
+  status: at(payStatuses, i),
 }));
+
+const ledgerReasons = ["Outage service credit", "Late payment fee", "Goodwill adjustment", "Reconnection fee", "Prorated plan change", "Equipment damage charge"];
+const agents = ["R. Delgado", "S. Haddad", "System", "K. Mensah"];
 
 export const ledger: LedgerEntry[] = customers.slice(0, 18).map((c, i) => ({
   id: `LED-${3000 + i}`,
@@ -121,17 +135,12 @@ export const ledger: LedgerEntry[] = customers.slice(0, 18).map((c, i) => ({
   customerName: c.name,
   date: `2026-08-${String((i % 27) + 1).padStart(2, "0")}`,
   type: i % 3 === 0 ? "debit" : "credit",
-  reason: [
-    "Outage service credit",
-    "Late payment fee",
-    "Goodwill adjustment",
-    "Reconnection fee",
-    "Prorated plan change",
-    "Equipment damage charge",
-  ][i % 6],
+  reason: at(ledgerReasons, i),
   amount: Number((8 + (i % 7) * 6.25).toFixed(2)),
-  appliedBy: ["R. Delgado", "S. Haddad", "System", "K. Mensah"][i % 4],
+  appliedBy: at(agents, i),
 }));
+
+const ppStatuses: PaymentPlan["status"][] = ["on_track", "at_risk", "on_track", "completed"];
 
 export const paymentPlans: PaymentPlan[] = customers
   .filter((c) => c.balance > 100)
@@ -145,7 +154,7 @@ export const paymentPlans: PaymentPlan[] = customers
     installments: 4 + (i % 3),
     paid: 1 + (i % 3),
     nextDue: `2026-09-${String((i % 27) + 1).padStart(2, "0")}`,
-    status: (["on_track", "at_risk", "on_track", "completed"] as const)[i % 4],
+    status: at(ppStatuses, i),
   }));
 
 export const taxRules: TaxRule[] = [
@@ -170,7 +179,7 @@ export const devices: Device[] = [
 export const onus: Onu[] = Array.from({ length: 14 }, (_, i) => ({
   id: `ONU-${100 + i}`,
   serial: `LMTK${String(48210033 + i * 41)}`,
-  customerName: customers[i].name,
+  customerName: at(customers, i).name,
   olt: i % 2 === 0 ? "olt-northgate-a" : "olt-cedar-b",
   ponPort: `0/${(i % 4) + 1}/${(i % 16) + 1}`,
   rxPower: Number((-18.4 - (i % 8) * 0.9).toFixed(1)),
@@ -187,73 +196,94 @@ export const subnets: Subnet[] = [
   { id: "SN-6", cidr: "10.60.0.0/20", purpose: "Fixed wireless pool", vlan: 760, gateway: "10.60.0.1", used: 712, size: 4094, site: "Ridgemont Tower" },
 ];
 
-export const leads: Lead[] = Array.from({ length: 16 }, (_, i) => ({
-  id: `LD-${200 + i}`,
-  name: i % 3 === 0 ? `${lastNames[i % lastNames.length]} Dental Group` : `${firstNames[(i * 3) % firstNames.length]} ${lastNames[(i * 5) % lastNames.length]}`,
-  contact: `${firstNames[(i * 3) % firstNames.length]} ${lastNames[(i * 5) % lastNames.length]}`,
-  phone: `+1 (555) ${String(300 + i).padStart(3, "0")}-77${String(10 + i).slice(0, 2)}`,
-  source: ["Web form", "Referral", "Door knock", "Trade show", "Inbound call"][i % 5],
-  stage: (["new", "qualified", "survey", "quoted", "won", "lost"] as const)[i % 6],
-  value: 49 + (i % 6) * 55,
-  owner: ["R. Delgado", "K. Mensah", "L. Petrova"][i % 3],
-  updated: `2026-08-${String((i % 16) + 1).padStart(2, "0")}`,
-  address: `${40 + i * 6} ${streets[(i + 2) % streets.length]}, ${cities[i % cities.length]}`,
-}));
+const leadSources = ["Web form", "Referral", "Door knock", "Trade show", "Inbound call"];
+const leadStages: Lead["stage"][] = ["new", "qualified", "survey", "quoted", "won", "lost"];
+const owners = ["R. Delgado", "K. Mensah", "L. Petrova"];
+
+export const leads: Lead[] = Array.from({ length: 16 }, (_, i) => {
+  const contact = `${at(firstNames, i * 3)} ${at(lastNames, i * 5)}`;
+  return {
+    id: `LD-${200 + i}`,
+    name: i % 3 === 0 ? `${at(lastNames, i)} Dental Group` : contact,
+    contact,
+    phone: `+1 (555) ${String(300 + i).padStart(3, "0")}-77${String(10 + i).slice(0, 2)}`,
+    source: at(leadSources, i),
+    stage: at(leadStages, i),
+    value: 49 + (i % 6) * 55,
+    owner: at(owners, i),
+    updated: `2026-08-${String((i % 16) + 1).padStart(2, "0")}`,
+    address: `${40 + i * 6} ${at(streets, i + 2)}, ${at(cities, i)}`,
+  } satisfies Lead;
+});
+
+const subjects = [
+  "No internet after storm",
+  "Intermittent packet loss in evenings",
+  "Slow speeds on Wi-Fi only",
+  "Requesting static IP block",
+  "Billing dispute on last invoice",
+  "ONT red LOS light",
+  "Router keeps rebooting",
+  "Relocation of service to new address",
+];
+const categories = ["Connectivity", "Performance", "Billing", "Provisioning", "Hardware"];
+const priorities: Ticket["priority"][] = ["urgent", "high", "normal", "normal", "low"];
+const ticketStatuses: Ticket["status"][] = ["new", "open", "pending", "escalated", "resolved", "closed"];
+const assignees = ["S. Haddad", "K. Mensah", "Unassigned", "L. Petrova", "T. Alvarez"];
+const channels: Ticket["channel"][] = ["Phone", "Email", "Portal", "Chat", "Walk-in"];
+const slaBuckets = [-45, 22, 180, 640, 1200, 90];
 
 export const tickets: Ticket[] = Array.from({ length: 22 }, (_, i) => {
-  const c = customers[(i * 3) % customers.length];
+  const c = at(customers, i * 3);
   return {
     id: `TK-${600 + i}`,
     number: `T-${48210 + i}`,
-    subject: [
-      "No internet after storm",
-      "Intermittent packet loss in evenings",
-      "Slow speeds on Wi-Fi only",
-      "Requesting static IP block",
-      "Billing dispute on last invoice",
-      "ONT red LOS light",
-      "Router keeps rebooting",
-      "Relocation of service to new address",
-    ][i % 8],
+    subject: at(subjects, i),
     customerId: c.id,
     customerName: c.name,
-    category: ["Connectivity", "Performance", "Billing", "Provisioning", "Hardware"][i % 5],
-    priority: (["urgent", "high", "normal", "normal", "low"] as const)[i % 5],
-    status: (["new", "open", "pending", "escalated", "resolved", "closed"] as const)[i % 6],
-    assignee: ["S. Haddad", "K. Mensah", "Unassigned", "L. Petrova", "T. Alvarez"][i % 5],
+    category: at(categories, i),
+    priority: at(priorities, i),
+    status: at(ticketStatuses, i),
+    assignee: at(assignees, i),
     created: `2026-08-${String((i % 16) + 1).padStart(2, "0")} 0${i % 9}:15`,
-    slaDueMinutes: [-45, 22, 180, 640, 1200, 90][i % 6],
-    channel: (["Phone", "Email", "Portal", "Chat", "Walk-in"] as const)[i % 5],
+    slaDueMinutes: at(slaBuckets, i),
+    channel: at(channels, i),
     messages: [
       { author: c.name, role: "customer", internal: false, time: "09:12", body: "Service dropped last night around 11pm and has not returned. Power cycled the ONT twice." },
-      { author: "System", role: "system", internal: false, time: "09:12", body: "Auto-diagnostics: ONT unreachable, last seen 23:04. PON port 0/2/7 shows LOS." },
-      { author: "S. Haddad", role: "agent", internal: true, time: "09:31", body: "Cedar Flats OLT reported degraded earlier — checking whether this is part of the same fault domain." },
+      { author: "System", role: "system", internal: false, time: "09:12", body: "Auto-diagnostics: ONT unreachable, last seen 23:04. PON port 0/2/7 reports LOS." },
+      { author: "S. Haddad", role: "agent", internal: true, time: "09:31", body: "Cedar Flats OLT reported degraded earlier — checking whether this is the same fault domain." },
       { author: "S. Haddad", role: "agent", internal: false, time: "09:40", body: "Thanks for the details. We've dispatched a technician for tomorrow 08:00–10:00 and credited today's outage." },
     ],
     attachments: i % 3 === 0 ? [{ name: "ont-led-photo.jpg", size: "1.2 MB" }, { name: "speedtest.pdf", size: "240 KB" }] : [],
-  };
+  } satisfies Ticket;
 });
 
+const jobTypes: JobOrder["type"][] = ["Installation", "Repair", "Upgrade", "Relocation", "Disconnection"];
+const techs = ["M. Okafor", "D. Whitfield", "P. Raman", "Unassigned", "I. Kovac"];
+const jobStatuses: JobOrder["status"][] = ["scheduled", "en_route", "in_progress", "completed", "unassigned", "failed"];
+const windows = ["08:00–10:00", "10:00–12:00", "13:00–15:00", "15:00–17:00"];
+const jobPriorities: JobOrder["priority"][] = ["normal", "high", "low"];
+
 export const jobs: JobOrder[] = Array.from({ length: 20 }, (_, i) => {
-  const c = customers[(i * 5) % customers.length];
+  const c = at(customers, i * 5);
   return {
     id: `JB-${800 + i}`,
     number: `WO-${31200 + i}`,
-    type: (["Installation", "Repair", "Upgrade", "Relocation", "Disconnection"] as const)[i % 5],
+    type: at(jobTypes, i),
     customerId: c.id,
     customerName: c.name,
     address: `${c.address}, ${c.city}`,
-    technician: ["M. Okafor", "D. Whitfield", "P. Raman", "Unassigned", "I. Kovac"][i % 5],
+    technician: at(techs, i),
     scheduled: `2026-08-${String(16 + (i % 6)).padStart(2, "0")}`,
-    window: ["08:00–10:00", "10:00–12:00", "13:00–15:00", "15:00–17:00"][i % 4],
-    status: (["scheduled", "en_route", "in_progress", "completed", "unassigned", "failed"] as const)[i % 6],
-    priority: (["normal", "high", "low"] as const)[i % 3],
+    window: at(windows, i),
+    status: at(jobStatuses, i),
+    priority: at(jobPriorities, i),
     equipment: [
       { item: i % 2 === 0 ? "LX-110 ONU" : "Managed Wi-Fi 6 Router", qty: 1 },
       { item: "Drop cable 150 ft", qty: 1 },
     ],
-    notes: "Confirm dish/drop path and capture photos of the installed CPE before closing the order.",
-  };
+    notes: "Confirm drop path and capture photos of the installed CPE before closing the order.",
+  } satisfies JobOrder;
 });
 
 export const warehouses: Warehouse[] = [
@@ -267,32 +297,39 @@ export const stock: StockItem[] = [
   { id: "ST-1", sku: "ONU-LX110", name: "Lumitek LX-110 ONU", category: "ONU", warehouse: "Central Depot", onHand: 412, reserved: 60, reorderPoint: 150, unitCost: 38.5, serialized: true },
   { id: "ST-2", sku: "ONT-LX220", name: "Lumitek LX-220 ONT (dual-band)", category: "ONU", warehouse: "Central Depot", onHand: 96, reserved: 34, reorderPoint: 120, unitCost: 62.0, serialized: true },
   { id: "ST-3", sku: "RTR-WIFI6", name: "Managed Wi-Fi 6 Router", category: "Router", warehouse: "Central Depot", onHand: 288, reserved: 71, reorderPoint: 100, unitCost: 74.25, serialized: true },
-  { id: "ST-4", sku: "CPE-FW5G", name: "Fixed Wireless CPE 5 GHz", category: "CPE", warehouse: "Northgate Hub", onHand: 41, reorderPoint: 60, reserved: 12, unitCost: 118.0, serialized: true },
+  { id: "ST-4", sku: "CPE-FW5G", name: "Fixed Wireless CPE 5 GHz", category: "CPE", warehouse: "Northgate Hub", onHand: 41, reserved: 12, reorderPoint: 60, unitCost: 118.0, serialized: true },
   { id: "ST-5", sku: "DRP-150", name: "Fiber drop cable 150 ft", category: "Cable", warehouse: "Northgate Hub", onHand: 620, reserved: 40, reorderPoint: 200, unitCost: 9.4, serialized: false },
   { id: "ST-6", sku: "SFP-BIDI", name: "BiDi SFP+ 10G optic", category: "Optic", warehouse: "Central Depot", onHand: 22, reserved: 6, reorderPoint: 40, unitCost: 46.0, serialized: true },
   { id: "ST-7", sku: "TOOL-FSPL", name: "Fusion splicer kit", category: "Tool", warehouse: "Field Van 12", onHand: 3, reserved: 0, reorderPoint: 2, unitCost: 2140.0, serialized: true },
   { id: "ST-8", sku: "CPE-BIZ", name: "Business edge CPE", category: "CPE", warehouse: "Central Depot", onHand: 58, reserved: 9, reorderPoint: 25, unitCost: 210.0, serialized: true },
 ];
 
-export const serials: SerialUnit[] = Array.from({ length: 18 }, (_, i) => ({
-  id: `SR-${900 + i}`,
-  serial: `SN${String(77420011 + i * 137)}`,
-  sku: stock[i % stock.length].sku,
-  model: stock[i % stock.length].name,
-  state: (["in_stock", "assigned", "deployed", "deployed", "rma", "retired"] as const)[i % 6],
-  location: warehouses[i % warehouses.length].name,
-  assignedTo: i % 6 === 1 || i % 6 === 2 ? customers[i % customers.length].name : undefined,
-}));
+const serialStates: SerialUnit["state"][] = ["in_stock", "assigned", "deployed", "deployed", "rma", "retired"];
+
+export const serials: SerialUnit[] = Array.from({ length: 18 }, (_, i) => {
+  const item = at(stock, i);
+  return {
+    id: `SR-${900 + i}`,
+    serial: `SN${String(77420011 + i * 137)}`,
+    sku: item.sku,
+    model: item.name,
+    state: at(serialStates, i),
+    location: at(warehouses, i).name,
+    ...(i % 6 === 1 || i % 6 === 2 ? { assignedTo: at(customers, i).name } : {}),
+  } satisfies SerialUnit;
+});
+
+const transferStatuses: Transfer["status"][] = ["in_transit", "received", "draft", "cancelled"];
 
 export const transfers: Transfer[] = Array.from({ length: 8 }, (_, i) => ({
   id: `TR-${500 + i}`,
   reference: `TRF-${9120 + i}`,
-  from: warehouses[i % warehouses.length].name,
-  to: warehouses[(i + 1) % warehouses.length].name,
+  from: at(warehouses, i).name,
+  to: at(warehouses, i + 1).name,
   items: 4 + (i % 9) * 3,
-  status: (["in_transit", "received", "draft", "cancelled"] as const)[i % 4],
+  status: at(transferStatuses, i),
   created: `2026-08-${String((i % 20) + 1).padStart(2, "0")}`,
-  requestedBy: ["I. Kovac", "P. Raman", "M. Okafor"][i % 3],
+  requestedBy: at(["I. Kovac", "P. Raman", "M. Okafor"], i),
 }));
 
 export const activity: ActivityEvent[] = [
