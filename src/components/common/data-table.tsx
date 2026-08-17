@@ -41,6 +41,11 @@ export interface FacetFilter<T> {
   match: (row: T, v: string) => boolean;
 }
 
+function renderCell<T>(c: Column<T> | undefined, row: T): ReactNode {
+  if (!c) return null;
+  return c.render ? c.render(row) : String(c.value?.(row) ?? "");
+}
+
 export function DataTable<T extends { id: string }>({
   rows,
   columns,
@@ -130,7 +135,7 @@ export function DataTable<T extends { id: string }>({
                 setPage(0);
               }}
             >
-              <SelectTrigger size="sm" className="h-8 min-w-[8rem] text-xs">
+              <SelectTrigger className="h-8 min-w-[8rem] text-xs">
                 <SlidersHorizontal className="size-3" />
                 <SelectValue placeholder={f.label} />
               </SelectTrigger>
@@ -284,11 +289,7 @@ export function DataTable<T extends { id: string }>({
                 className="space-y-2 px-3 py-3 active:bg-accent/40"
               >
                 <div className="text-sm font-medium">
-                  {cardTitle
-                    ? cardTitle(row)
-                    : columns[0].render
-                      ? columns[0].render(row)
-                      : String(columns[0].value?.(row) ?? "")}
+                  {cardTitle ? cardTitle(row) : renderCell(columns[0], row)}
                 </div>
                 <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
                   {columns.slice(1, 5).map((c) => (
