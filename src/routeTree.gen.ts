@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DunningRouteImport } from './routes/dunning'
+import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as PaymentPlansRouteImport } from './routes/payment-plans'
 import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as TaxesRouteImport } from './routes/taxes'
 import { Route as CustomersIndexRouteImport } from './routes/customers/index'
 import { Route as CustomersIdRouteImport } from './routes/customers/$id'
 import { Route as InvoicesIndexRouteImport } from './routes/invoices/index'
@@ -21,9 +25,29 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DunningRoute = DunningRouteImport.update({
+  id: '/dunning',
+  path: '/dunning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LedgerRoute = LedgerRouteImport.update({
+  id: '/ledger',
+  path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentPlansRoute = PaymentPlansRouteImport.update({
+  id: '/payment-plans',
+  path: '/payment-plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentsRoute = PaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaxesRoute = TaxesRouteImport.update({
+  id: '/taxes',
+  path: '/taxes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersIndexRoute = CustomersIndexRouteImport.update({
@@ -49,7 +73,11 @@ const InvoicesIdRoute = InvoicesIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dunning': typeof DunningRoute
+  '/ledger': typeof LedgerRoute
+  '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/customers/': typeof CustomersIndexRoute
@@ -57,7 +85,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dunning': typeof DunningRoute
+  '/ledger': typeof LedgerRoute
+  '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/customers': typeof CustomersIndexRoute
@@ -66,7 +98,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dunning': typeof DunningRoute
+  '/ledger': typeof LedgerRoute
+  '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/customers/': typeof CustomersIndexRoute
@@ -76,7 +112,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dunning'
+    | '/ledger'
+    | '/payment-plans'
     | '/payments'
+    | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
     | '/customers/'
@@ -84,7 +124,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/dunning'
+    | '/ledger'
+    | '/payment-plans'
     | '/payments'
+    | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
     | '/customers'
@@ -92,7 +136,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/dunning'
+    | '/ledger'
+    | '/payment-plans'
     | '/payments'
+    | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
     | '/customers/'
@@ -101,7 +149,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DunningRoute: typeof DunningRoute
+  LedgerRoute: typeof LedgerRoute
+  PaymentPlansRoute: typeof PaymentPlansRoute
   PaymentsRoute: typeof PaymentsRoute
+  TaxesRoute: typeof TaxesRoute
   CustomersIdRoute: typeof CustomersIdRoute
   InvoicesIdRoute: typeof InvoicesIdRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
@@ -117,11 +169,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dunning': {
+      id: '/dunning'
+      path: '/dunning'
+      fullPath: '/dunning'
+      preLoaderRoute: typeof DunningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ledger': {
+      id: '/ledger'
+      path: '/ledger'
+      fullPath: '/ledger'
+      preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment-plans': {
+      id: '/payment-plans'
+      path: '/payment-plans'
+      fullPath: '/payment-plans'
+      preLoaderRoute: typeof PaymentPlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payments': {
       id: '/payments'
       path: '/payments'
       fullPath: '/payments'
       preLoaderRoute: typeof PaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/taxes': {
+      id: '/taxes'
+      path: '/taxes'
+      fullPath: '/taxes'
+      preLoaderRoute: typeof TaxesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers/': {
@@ -157,7 +237,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DunningRoute: DunningRoute,
+  LedgerRoute: LedgerRoute,
+  PaymentPlansRoute: PaymentPlansRoute,
   PaymentsRoute: PaymentsRoute,
+  TaxesRoute: TaxesRoute,
   CustomersIdRoute: CustomersIdRoute,
   InvoicesIdRoute: InvoicesIdRoute,
   CustomersIndexRoute: CustomersIndexRoute,
