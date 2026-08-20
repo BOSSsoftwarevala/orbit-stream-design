@@ -189,3 +189,115 @@
   font-family: var(--font-mono);
   letter-spacing: -0.02em;
 }
+
+/* ---------------------------------------------------------------
+ * Premium depth layer — glass surfaces, 3D icon tiles, tactile buttons
+ * --------------------------------------------------------------- */
+
+:root {
+  --grad-teal: linear-gradient(145deg, oklch(0.78 0.13 195), oklch(0.52 0.13 215));
+  --grad-violet: linear-gradient(145deg, oklch(0.75 0.15 300), oklch(0.5 0.17 275));
+  --grad-amber: linear-gradient(145deg, oklch(0.84 0.15 80), oklch(0.62 0.16 45));
+  --grad-emerald: linear-gradient(145deg, oklch(0.82 0.15 155), oklch(0.53 0.14 165));
+  --grad-rose: linear-gradient(145deg, oklch(0.78 0.16 20), oklch(0.53 0.19 10));
+  --grad-slate: linear-gradient(145deg, oklch(0.7 0.03 250), oklch(0.42 0.03 255));
+  --shadow-3d: 0 1px 0 0 oklch(1 0 0 / 55%) inset, 0 10px 24px -12px oklch(0.2 0.05 250 / 45%),
+    0 2px 6px -2px oklch(0.2 0.05 250 / 25%);
+  --shadow-float: 0 24px 60px -28px oklch(0.2 0.06 250 / 55%);
+}
+
+.dark {
+  --shadow-3d: 0 1px 0 0 oklch(1 0 0 / 12%) inset, 0 12px 28px -14px oklch(0 0 0 / 70%),
+    0 2px 6px -2px oklch(0 0 0 / 45%);
+  --shadow-float: 0 28px 70px -30px oklch(0 0 0 / 80%);
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--surface) 72%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  box-shadow: var(--shadow-3d);
+}
+
+@utility glass-panel {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--surface) 88%, transparent),
+      color-mix(in oklab, var(--surface-2) 78%, transparent)
+    );
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+  box-shadow: var(--shadow-3d);
+  border-radius: var(--radius-xl);
+}
+
+@utility elevate {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+  }
+}
+
+@utility btn-3d {
+  position: relative;
+  border-radius: var(--radius-lg);
+  color: oklch(0.99 0 0);
+  box-shadow: var(--shadow-3d);
+  transition:
+    transform 140ms ease,
+    filter 140ms ease;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(to bottom, oklch(1 0 0 / 28%), oklch(1 0 0 / 0%) 55%);
+    pointer-events: none;
+  }
+  &:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+  &:active {
+    transform: translateY(1px) scale(0.995);
+    filter: brightness(0.97);
+  }
+}
+
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -40% -60%;
+    background: linear-gradient(115deg, transparent 40%, oklch(1 0 0 / 22%) 50%, transparent 60%);
+    transform: translateX(-60%);
+    transition: transform 700ms ease;
+  }
+  &:hover::before {
+    transform: translateX(60%);
+  }
+}
+
+@utility aurora {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(60% 55% at 12% 8%, oklch(0.72 0.13 195 / 28%), transparent 60%),
+      radial-gradient(50% 50% at 88% 12%, oklch(0.68 0.16 300 / 24%), transparent 60%),
+      radial-gradient(60% 60% at 70% 92%, oklch(0.75 0.15 155 / 22%), transparent 65%);
+    filter: blur(10px);
+  }
+}
