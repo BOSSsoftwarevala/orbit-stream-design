@@ -12,13 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as DunningRouteImport } from './routes/dunning'
+import { Route as LeadsRouteImport } from './routes/leads'
 import { Route as LedgerRouteImport } from './routes/ledger'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as NetworkRouteImport } from './routes/network'
 import { Route as PaymentPlansRouteImport } from './routes/payment-plans'
 import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as PipelineRouteImport } from './routes/pipeline'
+import { Route as PlansRouteImport } from './routes/plans'
 import { Route as ProvisioningRouteImport } from './routes/provisioning'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as StockRouteImport } from './routes/stock'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as TaxesRouteImport } from './routes/taxes'
 import { Route as CustomersIndexRouteImport } from './routes/customers/index'
 import { Route as CustomersIdRouteImport } from './routes/customers/$id'
@@ -42,9 +47,19 @@ const DunningRoute = DunningRouteImport.update({
   path: '/dunning',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeadsRoute = LeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LedgerRoute = LedgerRouteImport.update({
   id: '/ledger',
   path: '/ledger',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NetworkRoute = NetworkRouteImport.update({
@@ -62,6 +77,16 @@ const PaymentsRoute = PaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PipelineRoute = PipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlansRoute = PlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProvisioningRoute = ProvisioningRouteImport.update({
   id: '/provisioning',
   path: '/provisioning',
@@ -75,6 +100,11 @@ const ReportsRoute = ReportsRouteImport.update({
 const StockRoute = StockRouteImport.update({
   id: '/stock',
   path: '/stock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TaxesRoute = TaxesRouteImport.update({
@@ -117,13 +147,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
+  '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/pipeline': typeof PipelineRoute
+  '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
   '/stock': typeof StockRoute
+  '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
@@ -136,13 +171,18 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
+  '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/pipeline': typeof PipelineRoute
+  '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
   '/stock': typeof StockRoute
+  '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
@@ -156,13 +196,18 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
+  '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
+  '/pipeline': typeof PipelineRoute
+  '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
   '/stock': typeof StockRoute
+  '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
@@ -177,13 +222,18 @@ export interface FileRouteTypes {
     | '/'
     | '/dispatch'
     | '/dunning'
+    | '/leads'
     | '/ledger'
+    | '/login'
     | '/network'
     | '/payment-plans'
     | '/payments'
+    | '/pipeline'
+    | '/plans'
     | '/provisioning'
     | '/reports'
     | '/stock'
+    | '/subscriptions'
     | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
@@ -196,13 +246,18 @@ export interface FileRouteTypes {
     | '/'
     | '/dispatch'
     | '/dunning'
+    | '/leads'
     | '/ledger'
+    | '/login'
     | '/network'
     | '/payment-plans'
     | '/payments'
+    | '/pipeline'
+    | '/plans'
     | '/provisioning'
     | '/reports'
     | '/stock'
+    | '/subscriptions'
     | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
@@ -215,13 +270,18 @@ export interface FileRouteTypes {
     | '/'
     | '/dispatch'
     | '/dunning'
+    | '/leads'
     | '/ledger'
+    | '/login'
     | '/network'
     | '/payment-plans'
     | '/payments'
+    | '/pipeline'
+    | '/plans'
     | '/provisioning'
     | '/reports'
     | '/stock'
+    | '/subscriptions'
     | '/taxes'
     | '/customers/$id'
     | '/invoices/$id'
@@ -235,13 +295,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DispatchRoute: typeof DispatchRoute
   DunningRoute: typeof DunningRoute
+  LeadsRoute: typeof LeadsRoute
   LedgerRoute: typeof LedgerRoute
+  LoginRoute: typeof LoginRoute
   NetworkRoute: typeof NetworkRoute
   PaymentPlansRoute: typeof PaymentPlansRoute
   PaymentsRoute: typeof PaymentsRoute
+  PipelineRoute: typeof PipelineRoute
+  PlansRoute: typeof PlansRoute
   ProvisioningRoute: typeof ProvisioningRoute
   ReportsRoute: typeof ReportsRoute
   StockRoute: typeof StockRoute
+  SubscriptionsRoute: typeof SubscriptionsRoute
   TaxesRoute: typeof TaxesRoute
   CustomersIdRoute: typeof CustomersIdRoute
   InvoicesIdRoute: typeof InvoicesIdRoute
@@ -274,11 +339,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DunningRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leads': {
+      id: '/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ledger': {
       id: '/ledger'
       path: '/ledger'
       fullPath: '/ledger'
       preLoaderRoute: typeof LedgerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/network': {
@@ -302,6 +381,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pipeline': {
+      id: '/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof PipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plans': {
+      id: '/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof PlansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/provisioning': {
       id: '/provisioning'
       path: '/provisioning'
@@ -321,6 +414,13 @@ declare module '@tanstack/react-router' {
       path: '/stock'
       fullPath: '/stock'
       preLoaderRoute: typeof StockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/taxes': {
@@ -379,13 +479,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DispatchRoute: DispatchRoute,
   DunningRoute: DunningRoute,
+  LeadsRoute: LeadsRoute,
   LedgerRoute: LedgerRoute,
+  LoginRoute: LoginRoute,
   NetworkRoute: NetworkRoute,
   PaymentPlansRoute: PaymentPlansRoute,
   PaymentsRoute: PaymentsRoute,
+  PipelineRoute: PipelineRoute,
+  PlansRoute: PlansRoute,
   ProvisioningRoute: ProvisioningRoute,
   ReportsRoute: ReportsRoute,
   StockRoute: StockRoute,
+  SubscriptionsRoute: SubscriptionsRoute,
   TaxesRoute: TaxesRoute,
   CustomersIdRoute: CustomersIdRoute,
   InvoicesIdRoute: InvoicesIdRoute,
