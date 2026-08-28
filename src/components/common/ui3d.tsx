@@ -2,7 +2,19 @@ import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type Grad = "teal" | "violet" | "amber" | "emerald" | "rose" | "slate";
+export type Grad =
+  | "teal"
+  | "violet"
+  | "amber"
+  | "emerald"
+  | "rose"
+  | "slate"
+  | "fuchsia"
+  | "indigo"
+  | "lime"
+  | "sunset"
+  | "ocean"
+  | "cyan";
 
 export const gradVar: Record<Grad, string> = {
   teal: "var(--grad-teal)",
@@ -11,6 +23,12 @@ export const gradVar: Record<Grad, string> = {
   emerald: "var(--grad-emerald)",
   rose: "var(--grad-rose)",
   slate: "var(--grad-slate)",
+  fuchsia: "var(--grad-fuchsia)",
+  indigo: "var(--grad-indigo)",
+  lime: "var(--grad-lime)",
+  sunset: "var(--grad-sunset)",
+  ocean: "var(--grad-ocean)",
+  cyan: "var(--grad-cyan)",
 };
 
 /** Dimensional gradient icon tile — the app's "3D illustration" primitive. */
