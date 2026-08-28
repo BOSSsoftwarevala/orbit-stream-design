@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ComplaintsRouteImport } from './routes/complaints'
+import { Route as ContractsRouteImport } from './routes/contracts'
+import { Route as DevicesRouteImport } from './routes/devices'
 import { Route as DispatchRouteImport } from './routes/dispatch'
 import { Route as DunningRouteImport } from './routes/dunning'
+import { Route as IpamRouteImport } from './routes/ipam'
+import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as LeadsRouteImport } from './routes/leads'
 import { Route as LedgerRouteImport } from './routes/ledger'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NetworkRouteImport } from './routes/network'
+import { Route as OnuRouteImport } from './routes/onu'
 import { Route as PaymentPlansRouteImport } from './routes/payment-plans'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as PipelineRouteImport } from './routes/pipeline'
@@ -37,6 +43,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComplaintsRoute = ComplaintsRouteImport.update({
+  id: '/complaints',
+  path: '/complaints',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContractsRoute = ContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevicesRoute = DevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DispatchRoute = DispatchRouteImport.update({
   id: '/dispatch',
   path: '/dispatch',
@@ -45,6 +66,16 @@ const DispatchRoute = DispatchRouteImport.update({
 const DunningRoute = DunningRouteImport.update({
   id: '/dunning',
   path: '/dunning',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IpamRoute = IpamRouteImport.update({
+  id: '/ipam',
+  path: '/ipam',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsRoute = JobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeadsRoute = LeadsRouteImport.update({
@@ -65,6 +96,11 @@ const LoginRoute = LoginRouteImport.update({
 const NetworkRoute = NetworkRouteImport.update({
   id: '/network',
   path: '/network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnuRoute = OnuRouteImport.update({
+  id: '/onu',
+  path: '/onu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentPlansRoute = PaymentPlansRouteImport.update({
@@ -145,12 +181,18 @@ const TicketsIdRoute = TicketsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/complaints': typeof ComplaintsRoute
+  '/contracts': typeof ContractsRoute
+  '/devices': typeof DevicesRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/ipam': typeof IpamRoute
+  '/jobs': typeof JobsRoute
   '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
   '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
+  '/onu': typeof OnuRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
@@ -169,12 +211,18 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/complaints': typeof ComplaintsRoute
+  '/contracts': typeof ContractsRoute
+  '/devices': typeof DevicesRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/ipam': typeof IpamRoute
+  '/jobs': typeof JobsRoute
   '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
   '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
+  '/onu': typeof OnuRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
@@ -194,12 +242,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/complaints': typeof ComplaintsRoute
+  '/contracts': typeof ContractsRoute
+  '/devices': typeof DevicesRoute
   '/dispatch': typeof DispatchRoute
   '/dunning': typeof DunningRoute
+  '/ipam': typeof IpamRoute
+  '/jobs': typeof JobsRoute
   '/leads': typeof LeadsRoute
   '/ledger': typeof LedgerRoute
   '/login': typeof LoginRoute
   '/network': typeof NetworkRoute
+  '/onu': typeof OnuRoute
   '/payment-plans': typeof PaymentPlansRoute
   '/payments': typeof PaymentsRoute
   '/pipeline': typeof PipelineRoute
@@ -220,12 +274,18 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/complaints'
+    | '/contracts'
+    | '/devices'
     | '/dispatch'
     | '/dunning'
+    | '/ipam'
+    | '/jobs'
     | '/leads'
     | '/ledger'
     | '/login'
     | '/network'
+    | '/onu'
     | '/payment-plans'
     | '/payments'
     | '/pipeline'
@@ -244,12 +304,18 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/complaints'
+    | '/contracts'
+    | '/devices'
     | '/dispatch'
     | '/dunning'
+    | '/ipam'
+    | '/jobs'
     | '/leads'
     | '/ledger'
     | '/login'
     | '/network'
+    | '/onu'
     | '/payment-plans'
     | '/payments'
     | '/pipeline'
@@ -268,12 +334,18 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/complaints'
+    | '/contracts'
+    | '/devices'
     | '/dispatch'
     | '/dunning'
+    | '/ipam'
+    | '/jobs'
     | '/leads'
     | '/ledger'
     | '/login'
     | '/network'
+    | '/onu'
     | '/payment-plans'
     | '/payments'
     | '/pipeline'
@@ -293,12 +365,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ComplaintsRoute: typeof ComplaintsRoute
+  ContractsRoute: typeof ContractsRoute
+  DevicesRoute: typeof DevicesRoute
   DispatchRoute: typeof DispatchRoute
   DunningRoute: typeof DunningRoute
+  IpamRoute: typeof IpamRoute
+  JobsRoute: typeof JobsRoute
   LeadsRoute: typeof LeadsRoute
   LedgerRoute: typeof LedgerRoute
   LoginRoute: typeof LoginRoute
   NetworkRoute: typeof NetworkRoute
+  OnuRoute: typeof OnuRoute
   PaymentPlansRoute: typeof PaymentPlansRoute
   PaymentsRoute: typeof PaymentsRoute
   PipelineRoute: typeof PipelineRoute
@@ -325,6 +403,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/complaints': {
+      id: '/complaints'
+      path: '/complaints'
+      fullPath: '/complaints'
+      preLoaderRoute: typeof ComplaintsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contracts': {
+      id: '/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof ContractsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/devices': {
+      id: '/devices'
+      path: '/devices'
+      fullPath: '/devices'
+      preLoaderRoute: typeof DevicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dispatch': {
       id: '/dispatch'
       path: '/dispatch'
@@ -337,6 +436,20 @@ declare module '@tanstack/react-router' {
       path: '/dunning'
       fullPath: '/dunning'
       preLoaderRoute: typeof DunningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ipam': {
+      id: '/ipam'
+      path: '/ipam'
+      fullPath: '/ipam'
+      preLoaderRoute: typeof IpamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs': {
+      id: '/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leads': {
@@ -365,6 +478,13 @@ declare module '@tanstack/react-router' {
       path: '/network'
       fullPath: '/network'
       preLoaderRoute: typeof NetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onu': {
+      id: '/onu'
+      path: '/onu'
+      fullPath: '/onu'
+      preLoaderRoute: typeof OnuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payment-plans': {
@@ -477,12 +597,18 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ComplaintsRoute: ComplaintsRoute,
+  ContractsRoute: ContractsRoute,
+  DevicesRoute: DevicesRoute,
   DispatchRoute: DispatchRoute,
   DunningRoute: DunningRoute,
+  IpamRoute: IpamRoute,
+  JobsRoute: JobsRoute,
   LeadsRoute: LeadsRoute,
   LedgerRoute: LedgerRoute,
   LoginRoute: LoginRoute,
   NetworkRoute: NetworkRoute,
+  OnuRoute: OnuRoute,
   PaymentPlansRoute: PaymentPlansRoute,
   PaymentsRoute: PaymentsRoute,
   PipelineRoute: PipelineRoute,
