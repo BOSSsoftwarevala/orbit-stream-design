@@ -28,9 +28,13 @@ import { Route as PipelineRouteImport } from './routes/pipeline'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as ProvisioningRouteImport } from './routes/provisioning'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SerialsRouteImport } from './routes/serials'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StockRouteImport } from './routes/stock'
 import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as TaxesRouteImport } from './routes/taxes'
+import { Route as TransfersRouteImport } from './routes/transfers'
+import { Route as WarehousesRouteImport } from './routes/warehouses'
 import { Route as CustomersIndexRouteImport } from './routes/customers/index'
 import { Route as CustomersIdRouteImport } from './routes/customers/$id'
 import { Route as InvoicesIndexRouteImport } from './routes/invoices/index'
@@ -133,6 +137,16 @@ const ReportsRoute = ReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SerialsRoute = SerialsRouteImport.update({
+  id: '/serials',
+  path: '/serials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StockRoute = StockRouteImport.update({
   id: '/stock',
   path: '/stock',
@@ -146,6 +160,16 @@ const SubscriptionsRoute = SubscriptionsRouteImport.update({
 const TaxesRoute = TaxesRouteImport.update({
   id: '/taxes',
   path: '/taxes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WarehousesRoute = WarehousesRouteImport.update({
+  id: '/warehouses',
+  path: '/warehouses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersIndexRoute = CustomersIndexRouteImport.update({
@@ -199,9 +223,13 @@ export interface FileRoutesByFullPath {
   '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
+  '/serials': typeof SerialsRoute
+  '/settings': typeof SettingsRoute
   '/stock': typeof StockRoute
   '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
+  '/transfers': typeof TransfersRoute
+  '/warehouses': typeof WarehousesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/tickets/$id': typeof TicketsIdRoute
@@ -229,9 +257,13 @@ export interface FileRoutesByTo {
   '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
+  '/serials': typeof SerialsRoute
+  '/settings': typeof SettingsRoute
   '/stock': typeof StockRoute
   '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
+  '/transfers': typeof TransfersRoute
+  '/warehouses': typeof WarehousesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/tickets/$id': typeof TicketsIdRoute
@@ -260,9 +292,13 @@ export interface FileRoutesById {
   '/plans': typeof PlansRoute
   '/provisioning': typeof ProvisioningRoute
   '/reports': typeof ReportsRoute
+  '/serials': typeof SerialsRoute
+  '/settings': typeof SettingsRoute
   '/stock': typeof StockRoute
   '/subscriptions': typeof SubscriptionsRoute
   '/taxes': typeof TaxesRoute
+  '/transfers': typeof TransfersRoute
+  '/warehouses': typeof WarehousesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/$id': typeof InvoicesIdRoute
   '/tickets/$id': typeof TicketsIdRoute
@@ -292,9 +328,13 @@ export interface FileRouteTypes {
     | '/plans'
     | '/provisioning'
     | '/reports'
+    | '/serials'
+    | '/settings'
     | '/stock'
     | '/subscriptions'
     | '/taxes'
+    | '/transfers'
+    | '/warehouses'
     | '/customers/$id'
     | '/invoices/$id'
     | '/tickets/$id'
@@ -322,9 +362,13 @@ export interface FileRouteTypes {
     | '/plans'
     | '/provisioning'
     | '/reports'
+    | '/serials'
+    | '/settings'
     | '/stock'
     | '/subscriptions'
     | '/taxes'
+    | '/transfers'
+    | '/warehouses'
     | '/customers/$id'
     | '/invoices/$id'
     | '/tickets/$id'
@@ -352,9 +396,13 @@ export interface FileRouteTypes {
     | '/plans'
     | '/provisioning'
     | '/reports'
+    | '/serials'
+    | '/settings'
     | '/stock'
     | '/subscriptions'
     | '/taxes'
+    | '/transfers'
+    | '/warehouses'
     | '/customers/$id'
     | '/invoices/$id'
     | '/tickets/$id'
@@ -383,9 +431,13 @@ export interface RootRouteChildren {
   PlansRoute: typeof PlansRoute
   ProvisioningRoute: typeof ProvisioningRoute
   ReportsRoute: typeof ReportsRoute
+  SerialsRoute: typeof SerialsRoute
+  SettingsRoute: typeof SettingsRoute
   StockRoute: typeof StockRoute
   SubscriptionsRoute: typeof SubscriptionsRoute
   TaxesRoute: typeof TaxesRoute
+  TransfersRoute: typeof TransfersRoute
+  WarehousesRoute: typeof WarehousesRoute
   CustomersIdRoute: typeof CustomersIdRoute
   InvoicesIdRoute: typeof InvoicesIdRoute
   TicketsIdRoute: typeof TicketsIdRoute
@@ -529,6 +581,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/serials': {
+      id: '/serials'
+      path: '/serials'
+      fullPath: '/serials'
+      preLoaderRoute: typeof SerialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stock': {
       id: '/stock'
       path: '/stock'
@@ -548,6 +614,20 @@ declare module '@tanstack/react-router' {
       path: '/taxes'
       fullPath: '/taxes'
       preLoaderRoute: typeof TaxesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/warehouses': {
+      id: '/warehouses'
+      path: '/warehouses'
+      fullPath: '/warehouses'
+      preLoaderRoute: typeof WarehousesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers/': {
@@ -615,9 +695,13 @@ const rootRouteChildren: RootRouteChildren = {
   PlansRoute: PlansRoute,
   ProvisioningRoute: ProvisioningRoute,
   ReportsRoute: ReportsRoute,
+  SerialsRoute: SerialsRoute,
+  SettingsRoute: SettingsRoute,
   StockRoute: StockRoute,
   SubscriptionsRoute: SubscriptionsRoute,
   TaxesRoute: TaxesRoute,
+  TransfersRoute: TransfersRoute,
+  WarehousesRoute: WarehousesRoute,
   CustomersIdRoute: CustomersIdRoute,
   InvoicesIdRoute: InvoicesIdRoute,
   TicketsIdRoute: TicketsIdRoute,
